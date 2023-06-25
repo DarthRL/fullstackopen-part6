@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { clearTimeoutID, setTimeoutID } from "./timeoutIDReducer";
 
 const notificationSlice = createSlice({
   name: 'notification',
@@ -16,11 +17,16 @@ const notificationSlice = createSlice({
 export const {createNotification, deleteNotification} = notificationSlice.actions
 
 export const setNotification = (content, timer) => {
-  return async dispatch => {
+  return async (dispatch, getState) => {
+    if(getState().timeoutID !== null) {
+      clearTimeout(getState().timeoutID)
+      dispatch(clearTimeoutID())
+    }
     dispatch(createNotification(content))
-    setTimeout(() => {
+    const timeoutID = setTimeout(() => {
       dispatch(deleteNotification())
     }, timer * 1000)
+    dispatch(setTimeoutID(timeoutID))
   }
 }
 
