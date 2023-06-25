@@ -10,6 +10,13 @@ const AnecdoteForm = () => {
     onSuccess: (newAnecdote) => {
       const anecdotes = queryClient.getQueryData('anecdotes')
       queryClient.setQueryData('anecdotes', anecdotes.concat(newAnecdote))
+    },
+    onError: (axiosError) => {
+      console.log(axiosError.response.data.error)
+      messageDispatch({ type: 'CREATE', payload: `Error: ${axiosError.response.data.error}` })
+      setTimeout(() => {
+        messageDispatch({ type: 'CLEAR' })
+      }, 5000)
     }
   })
 
@@ -17,9 +24,9 @@ const AnecdoteForm = () => {
     event.preventDefault()
     const content = event.target.anecdote.value
     event.target.anecdote.value = ''
-    messageDispatch({type:'CREATE', payload:`you created ${content}`})
+    messageDispatch({ type: 'CREATE', payload: `you created ${content}` })
     setTimeout(() => {
-      messageDispatch({type:'CLEAR'})
+      messageDispatch({ type: 'CLEAR' })
     }, 5000)
     newAnecdoteMutation.mutate({ content, votes: 0 })
   }
