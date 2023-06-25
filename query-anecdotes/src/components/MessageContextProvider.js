@@ -14,7 +14,7 @@ const messageReducer = (state, action) => {
 const MessageContext = createContext()
 
 export const MessageContextProvider = (props) => {
-  const [message, messageDispatch] = useReducer(messageReducer, 0)
+  const [message, messageDispatch] = useReducer(messageReducer, null)
 
   return (
     <MessageContext.Provider value={[message, messageDispatch]}>
